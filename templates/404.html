@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+	<div class="container">
+		<h2 class="text-center">Rất tiếc! Không tìm thấy trang!</h2>
+			<br />
+			<div class="text-center">
+				<a href="{% url 'store' %}" class="btn btn-primary">Trang chủ</a>
+			</div>
+	</div>
+</section>
+{% endblock %}

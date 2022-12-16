@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+	<div class="container">
+		<h4 class="text-center m-auto mb-6">
+			Thông tin giao hàng
+		</h4>
+		<br>
+		<form action="{%url 'ordered' %}" method="POST" onSubmit="return validateNumberPhone()">
+		{% csrf_token %}
+			<div class="form-group row">
+			  <label for="inputPassword3" class="col-sm-2 col-form-label">Số điện thoại</label>
+			  <div class="col-sm-10">
+				<input required type="tel" pattern=".{10}" class="form-control" id="phone_order" name="phone"  placeholder="Vui lòng nhập số điện thoại">
+			  </div>
+			</div>
+			<div class="form-group row">
+				<label for="inputPassword3" class="col-sm-2 col-form-label">Tỉnh/Thành Phố</label>
+				<div class="col-sm-10">
+					<div class="form-group">
+						<select id="province" name="province" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' class="form-control"  >
+						</select>
+					  </div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputPassword3" class="col-sm-2 col-form-label">Quận/Huyện</label>
+				<div class="col-sm-10">
+					<div class="form-group">
+						<select id="district" name="district"  onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' class="form-control"  >
+						</select>
+					  </div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputPassword3" class="col-sm-2 col-form-label">Phường/Xã</label>
+				<div class="col-sm-10">
+					<div class="form-group">
+						<select id="ward" name="ward" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' class="form-control"  >
+						</select>
+					  </div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="inputEmail3" class="col-sm-2 col-form-label">Địa chỉ</label>
+				<div class="col-sm-10">
+				  <input required type="text" class="form-control" name="address" placeholder="Ví dụ: số 100 đường 3/2">
+				</div>
+			</div>
+			<input type="hidden" id="result" name="result" ></input>
+			<div class="form-group row justify-content-center">
+			  <div class="col-sm-10">
+				<button onSubmit="" type="submit" class="btn btn-primary">Tiến hành đặt hàng</button>
+			  </div>
+			</div>
+		  </form>
+	</div>
+
+	<!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+	function getCookie(name) {
+		let cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			const cookies = document.cookie.split(';');
+			for (let i = 0; i < cookies.length; i++) {
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0, name.length + 1) === (name + '=')) {
+					cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+					break;
+				}
+			}
+		}
+		return cookieValue;
+	}
+
+	var amount = parseFloat("{{ grand_total }}");
+	{% comment %} var url = "{% url 'payments' %}"; {% endcomment %}
+	var csrfToken = getCookie('csrftoken');
+	var orderID = "{{ order.order_number }}";
+	var paymentMethod = 'PayPal';
+	{% comment %} var redirectUrl = "{% url 'order_complete' %}" {% endcomment %}
+
+	paypal.Buttons({
+		// Style for button
+		style: {
+                color:  'blue',
+                shape:  'pill',
+                label:  'pay',
+                height: 40,
+        },
+
+		// Set up the transaction
+		createOrder: function(data, actions) {
+			return actions.order.create({
+				purchase_units: [{
+					amount: {
+						value: amount
+					}
+				}]
+			});
+		},
+
+		// Finalize the transaction
+		onApprove: function(data, actions) {
+			return actions.order.capture().then(function(details) {
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: {
+						'csrfmiddlewaretoken': "{{ csrf_token }}",
+						'orderID': orderID,
+						'transID': details.id,
+						'payment_method': paymentMethod,
+						'status': details.status,
+					},
+					success: function(response) {
+						data = response.data;
+						alert('Transaction completed by ' + details.payer.name.given_name + '!');
+						window.location.href = redirectUrl + '?order_number=' + data["order_number"] + '&payment_id=' + data["transID"];
+					},
+					error: function(response) {
+						error = response.error;
+						alert('Transaction completed, but 1 error occurred: ' + e);
+					}
+				});
+			});
+		}
+	}).render('#paypal-button-container');
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ========================= SECTION MAIN ========================= -->
+<section class="section-intro padding-y-sm">
+    <div class="container">
+        <div class="intro-banner-wrap">
+            {% include "includes/alerts.html" %}
+            <img src="{% static 'images/banners/cover3.jpg' %}" class="img-fluid rounded">
+        </div>
+    </div> <!-- container //  -->
+</section>
+<!-- ========================= SECTION MAIN END// ========================= -->
+
+<!-- ========================= SECTION  ========================= -->
+<section class="section-name padding-y-sm">
+    <div class="container">
+        <header class="section-heading">
+            <a href="{% url 'store' %}" class="btn btn-outline-primary float-right">Xem tất cả</a>
+            <h3 class="section-title text-success">Sách nổi bật</h3>
+            <br>
+            {% comment %} <img style="width: 1200px" src="{% static 'images/banners/new_product.webp' %}" alt=""> {% endcomment %}
+        </header><!-- sect-heading -->
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="{{ product.get_url }}" class="title" style="text-overflow: ellipsis; overflow: hidden">{{ product.product_name }}</a>
+                        {% if product.discount != 0 %}
+                        <var class="price"><div>{{  product.getPriceSaleFormatVND }}đ </div><small><strike>{{  product.getPriceFormatVND }}đ</strike></small> <small class="text-danger">-{% widthratio product.discount 1 100 %}%</small></var>
+                        {% else %}
+                            <div class="price mt-1">{{ product.getPriceFormatVND }} ₫ </div> <!-- price-wrap.// -->
+                        {% endif %}
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            {% endfor %}
+        </div> <!-- row.// -->
+
+        <header class="section-heading">
+            <h3 class="section-title text-success">Sách bán chạy</h3>
+            <br>
+            {% comment %} <img style="width: 1200px" src="{% static 'images/banners/new_product.webp' %}" alt=""> {% endcomment %}
+        </header><!-- sect-heading -->
+        <div class="row">
+            {% for product in products_new %}
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="{{ product.get_url }}" class="title" style="text-overflow: ellipsis; overflow: hidden">{{ product.product_name }}</a>
+                        {% if product.discount != 0 %}
+                        <var class="price"><div>{{  product.getPriceSaleFormatVND }}đ </div><small><strike>{{  product.getPriceFormatVND }}đ</strike></small> <small class="text-danger">-{% widthratio product.discount 1 100 %}%</small></var>
+                        {% else %}
+                            <div class="price mt-1">{{ product.getPriceFormatVND }} ₫ </div> <!-- price-wrap.// -->
+                        {% endif %}
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            {% endfor %}
+        </div> <!-- row.// -->
+
+        <header class="section-heading">
+            <h3 class="section-title text-success">Sách giảm giá nhiều nhất</h3>
+            <br>
+            {% comment %} <img style="width: 1200px" src="{% static 'images/banners/new_product.webp' %}" alt=""> {% endcomment %}
+        </header><!-- sect-heading -->
+        <div class="row">
+            {% for product in products_discount %}
+            <div class="col-md-3">
+                <div class="card card-product-grid">
+                    <a href="{{ product.get_url }}" class="img-wrap"> <img src="{{ product.images.url }}"> </a>
+                    <figcaption class="info-wrap">
+                        <a href="{{ product.get_url }}" class="title" style="text-overflow: ellipsis; overflow: hidden">{{ product.product_name }}</a>
+                        {% if product.discount != 0 %}
+                        <var class="price"><div>{{  product.getPriceSaleFormatVND }}đ </div><small><strike>{{  product.getPriceFormatVND }}đ</strike></small> <small class="text-danger">-{% widthratio product.discount 1 100 %}%</small></var>
+                        {% else %}
+                            <div class="price mt-1">{{ product.getPriceFormatVND }} ₫ </div> <!-- price-wrap.// -->
+                        {% endif %}
+                    </figcaption>
+                </div>
+            </div> <!-- col.// -->
+            {% endfor %}
+        </div> <!-- row.// -->
+    </div><!-- container // -->
+</section>
+<!-- ========================= SECTION  END// ========================= -->
+{% endblock %}

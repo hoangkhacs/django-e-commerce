@@ -1,0 +1,185 @@
+<aside class="col-md-3">
+    <div class="card">
+        <article class="filter-group">
+            <header class="card-header">
+                <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="">
+                    <i class="icon-control fa fa-chevron-down"></i>
+                    <h6 class="title">Thể loại</h6>
+                </a>
+            </header>
+            <!-- filter-group  .// -->
+            <div class="filter-content collapse show" id="collapse_1">
+                <div class="card-body">
+                    {% comment %} <ul class="list-menu">
+                        <li><a href="{% url 'store' %}">Tất cả sách</a></li>
+                        {% for category in nodes %}
+                        <li>
+                            <a href="{% url 'store' %}category/{{ category.slug }}">{{ category.category_name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul> {% endcomment %}
+                    {% load mptt_tags %}
+                        {% recursetree nodes %}
+                                <a class="dropdown-item" href="{% url 'store' %}category/{{ node.slug }}">{{node}}</a>
+                                {% if not node.is_leaf_node %}
+                                    <ul class="children">
+                                        <a class="dropdown-item" href="{% url 'store' %}category/{{ node.slug }}">{{ children }}</a>
+                                    </ul>
+                                {% endif %} 
+                        {% endrecursetree %}
+                </div>
+                <!-- card-body.// -->
+            </div>
+        </article>
+
+        <form action="{{ request.path }}" method='GET'>
+            <article class="filter-group">
+                <header class="card-header">
+                    <a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
+                        <i class="icon-control fa fa-chevron-down"></i>
+                        <h6 class="title">Nhà xuất bản</h6>
+                    </a>
+                </header>
+                <div class="filter-content collapse show" id="collapse_2">
+                    <div class="card-body">
+                        <div class="form-row d-block">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="public_company" value="{{ public_company }}" id="checkAll2" checked>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Tất cả
+                                </label>
+                              </div>
+                            {% for public in public_company %}
+                            <div class="form-check">
+                                <input class="form-check-input check2" type="checkbox" name="public" value="{{ public.name }}" id="flexCheckChecked">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    {{public.name}}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="filter-group">
+                <header class="card-header">
+                    <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="">
+                        <i class="icon-control fa fa-chevron-down"></i>
+                        <h6 class="title">Tác giả</h6>
+                    </a>
+                </header>
+                <div class="filter-content collapse show" id="collapse_3">
+                    <div class="card-body">
+                        <div class="form-row d-block">
+                            <div class="form-check">
+                                <input class="form-check-input" name='author_all' type="checkbox" value="" id = "checkAll3" checked>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Tất cả
+                                </label>
+                              </div>
+                            {% for author in authors %}
+                            <div class="form-check">
+                                <input class="form-check-input check3" type="checkbox" value="" name={{author.name}} id="flexCheckChecked">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    {{author.name}}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            <article class="filter-group">
+                <header class="card-header">
+                    <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="">
+                        <i class="icon-control fa fa-chevron-down"></i>
+                        <h6 class="title">Nhà cung cấp</h6>
+                    </a>
+                </header>
+                <div class="filter-content collapse show" id="collapse_4">
+                    <div class="card-body">
+                        <div class="form-row d-block">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id = "checkAll4" checked>
+                                <label class="form-check-label" for="flexCheckDefault">
+                                  Tất cả
+                                </label>
+                              </div>
+                            {% for supplier in suppliers %}
+                            <div class="form-check">
+                                <input class="form-check-input check4" type="checkbox" value="" id="flexCheckChecked">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    {{supplier.name}}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="filter-group">
+                <header class="card-header">
+                    <a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="true" class="">
+                        <i class="icon-control fa fa-chevron-down"></i>
+                        <h6 class="title">Khoảng giá</h6>
+                    </a>
+                </header>
+                <div class="filter-content collapse show" id="collapse_5">
+                    <div class="card-body">
+                        <div class="form-row d-block">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 0 id="flexRadioDefault1 checkAll5" checked>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    Tất cả
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input check5" type="radio" name="price" value = 1 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    0đ - 100,000đ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 2 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    100,000đ - 200,000đ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 3 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    200,000đ - 300,000đ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 4 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    300,000đ - 400,000đ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 5 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    400,000đ - 500,000đ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value = 6 id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    Lớn hơn 500,000đ
+                                </label>
+                            </div>
+                        </div>
+                        <!-- form-row.// -->
+                        <br>
+                    </div>
+                    <!-- card-body.// -->
+                </div>
+                <button class="btn btn-block btn-primary">Áp dụng</button>
+            </article>
+        </form>
+        <!-- filter-group .// -->
+    </div>
+    <!-- card.// -->
+</aside>

@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+	<div class="container">
+        <h2 class="text-center">Thống kê</h2>
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <a class="text-decoration-none text-dark" href="staff.html">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Khách hàng</i></h4>
+                                        <h3>{{count_user}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a class="text-decoration-none text-dark" href="product.html">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Số lượng sách</i></h4>
+                                        <h3>{{count_product}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4">
+                                <a class="text-decoration-none text-dark" href="order.html">
+                                    <div class="card my-card shadow text-center p-3">
+                                        <h4>Số đơn đặt hàng</i></h4>
+                                        <h3>{{count_order}}</h3>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Tài khoản đăng nhập gần nhất
+                    </div>
+                    {% for user in users %}
+                        <li class="list-group-item">{{user.last_name}} {{user.first_name}} ({{user.username}})  {{user.last_login}}</li>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h2 class="text-center">Thống doanh thu hàng tháng</h2>
+        <div class="mx-4">
+            <canvas id="myChart"></canvas>
+        </div>
+
+        <h2 class="text-center">Thống doanh thu hàng ngày<h2>
+        <div class="mx-4">
+            <canvas id="myChart2"></canvas>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-6">
+                <h2 class="text-center">Top 5 sách bán chạy nhất</h2>
+                <div class="align-items-sm-center w-75 p-3 ml-5">
+                    <canvas class="" id="myChart3" ></canvas>
+                </div>
+            </div>
+            <div class="col-6" width="200px">
+                <h2 class="text-center">Top 5 sách số lượng tồn kho lớn nhất</h2>
+                <div class="align-items-sm-center w-75 p-3 ml-5">
+                    <canvas id="myChart4"></canvas>
+                </div>
+            </div>
+        </div>
+		<!-- ============================ COMPONENT 1 ================================= -->
+	</div>
+    <script>
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: [{%for o in output%}'Tháng {{o.month}}',{%endfor%}],
+            datasets: [{
+              label: 'Doanh thu cửa hàng hàng tháng',
+              data: [{%for o in output%}{{o.total}},{%endfor%}],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        const ctx2 = document.getElementById('myChart2');
+        new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: [{%for o in output_day%}'Ngày {{o.day}}',{%endfor%}],
+            datasets: [{
+              label: 'Doanh thu cửa hàng hàng ngày',
+              data: [{%for o in output_day%}{{o.total}},{%endfor%}],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        const ctx3 = document.getElementById('myChart3');
+        new Chart(ctx3, {
+          type: 'pie',
+          data: {
+            labels: [{%for o in output_saled%}'{{o.product_name}}',{%endfor%}],
+            datasets: [{
+              label: 'Tỷ 5 sách bán chạy nhất',
+              data: [{%for o in output_saled%}{{o.saled}},{%endfor%}],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        const ctx4 = document.getElementById('myChart4');
+        new Chart(ctx4, {
+          type: 'pie',
+          data: {
+            labels: [{%for o in output_quantity%}'{{o.product_name}}',{%endfor%}],
+            datasets: [{
+              label: 'Top 5 sách số lượng tồn kho lớn nhất',
+              data: [{%for o in output_quantity%}{{o.quantity}},{%endfor%}],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      </script>
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+{% endblock %}
